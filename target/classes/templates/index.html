@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>店舗検索 | 紺の街</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+<header class="site-header">
+    <div class="container">
+        <a class="brand" th:href="@{/}"><img src="/images/brand/logo.svg" alt="紺の街" class="site-logo"/> 紺の街</a>
+        <nav>
+            <a th:href="@{/}">店舗検索</a>
+            <a th:href="@{/admin}">管理画面</a>
+        </nav>
+    </div>
+</header>
+
+<!-- Inline SVG icons (hidden) -->
+<svg aria-hidden="true" xmlns:xlink="http://www.w3.org/1999/xlink" style="position:absolute;width:0;height:0;overflow:hidden;" focusable="false">
+    <symbol id="icon-phone" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1v3.5a1 1 0 01-1 1C10.07 21.5 2.5 13.93 2.5 4a1 1 0 011-1H7a1 1 0 011 1c0 1.24.2 2.45.57 3.57a1 1 0 01-.24 1.01l-2.71 2.21z"/>
+    </symbol>
+    <symbol id="icon-map" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1114.5 9 2.5 2.5 0 0112 11.5z"/>
+    </symbol>
+    <symbol id="icon-clock" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M12 1a11 11 0 1011 11A11 11 0 0012 1zm1 11H7a1 1 0 010-2h5V6a1 1 0 012 0z"/>
+    </symbol>
+</svg>
+
+<main class="container">
+<section>
+    <div class="hero hero-city">
+        <div class="hero-banner">
+            <div class="hero-badge">店舗検索</div>
+            <div class="hero-brand">紺の街</div>
+            <div class="hero-subtitle">カテゴリやキーワードで店舗を絞り込み、予約できます。</div>
+        </div>
+        <div class="hero-visual" aria-label="ブランドイメージ">
+            <img src="/images/brand/hero-banner.svg" alt="紺の街 ブランドイメージ" />
+        </div>
+        <div class="quick-tabs" aria-label="地域選択">
+            <button type="button" class="quick-tab active">全国</button>
+            <button type="button" class="quick-tab">埼玉</button>
+            <button type="button" class="quick-tab">東京</button>
+            <button type="button" class="quick-tab">千葉</button>
+            <button type="button" class="quick-tab">神奈川</button>
+        </div>
+    </div>
+
+    <div class="page-grid">
+        <aside class="filters">
+            <form class="search-form" th:action="@{/}" method="get">
+                <div class="field">
+                    <label>キーワード</label>
+                    <input type="text" name="q" th:value="${keyword}" placeholder="店舗名・ジャンル・説明を検索" />
+                </div>
+                <div class="field">
+                    <label>カテゴリ</label>
+                    <select name="category">
+                        <option value="" th:text="'すべて'" th:selected="${selectedCategory == null}"></option>
+                        <option th:each="category : ${categories}"
+                                th:value="${category.id}"
+                                th:text="${category.name}"
+                                th:selected="${selectedCategory == category.id}"></option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>都道府県</label>
+                    <select name="prefecture">
+                        <option value="" th:text="'すべて'" th:selected="${selectedPrefecture == null}"></option>
+                        <option th:each="prefecture : ${prefectures}"
+                                th:value="${prefecture}"
+                                th:text="${prefecture}"
+                                th:selected="${selectedPrefecture == prefecture}"></option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>予算</label>
+                    <select name="priceRange">
+                        <option value="" th:text="'すべて'" th:selected="${selectedPriceRange == null}"></option>
+                        <option th:each="range : ${priceRanges}"
+                                th:value="${range}"
+                                th:text="${range}"
+                                th:selected="${selectedPriceRange == range}"></option>
+                    </select>
+                </div>
+                <div class="field">
+                    <button type="submit" class="button">検索</button>
+                </div>
+            </form>
+            <div class="filter-ads">
+                <!-- Placeholder for sidebar banners or featured links -->
+                <div class="ad-box">広告スペース</div>
+            </div>
+        </aside>
+
+        <section class="results">
+            <div class="store-list">
+                <div th:if="${stores.isEmpty()}">該当する店舗がありません。</div>
+                <article class="store-card compact" th:each="store : ${stores}" th:with="imgIndex=${(store.id - 1) % 10 + 1}">
+                    <div class="card-header">
+                        <div class="ch-left">
+                            <h3 class="store-name" th:text="${store.name}"></h3>
+                            <div class="meta small">
+                                <span th:text="${store.prefecture}"></span>
+                                <span th:text="${store.genre}"></span>
+                                <span th:text="${store.category.name}"></span>
+                                                            <span class="coupon-badge" th:each="c,stat : ${store.coupons.?[active]}" th:if="${stat.index == 0}" th:text="${c.title}"></span>
+                                                        </div>
+                        </div>
+                        <div class="ch-right">
+                            <div class="price" th:text="${store.priceRange}"></div>
+                        </div>
+                    </div>
+
+                    <div class="store-card-body">
+                        <div class="thumb" th:if="${store.images != null and !store.images.isEmpty()}">
+                                                    <div th:with="first=${store.images[0]}">
+                                                        <picture>
+                                                            <source th:if="${first.filenameWebp != null}" th:attr="srcset=${first.thumbnailWebp} + ' 320w, ' + ${first.mediumFilenameWebp} + ' 640w, ' + ${first.largeFilenameWebp} + ' 1024w, ' + ${first.filenameWebp} + ' 1400w'" type="image/webp" />
+                                                            <source th:if="${first.mediumFilename != null}" th:attr="srcset=${first.thumbnail} + ' 320w, ' + ${first.mediumFilename} + ' 640w, ' + ${first.largeFilename} + ' 1024w, ' + ${first.filename} + ' 1400w'" />
+                                                            <img th:src="${first.mediumFilename != null ? first.mediumFilename : first.filename}" th:alt="${store.name}" loading="lazy" onerror="this.onerror=null;this.src='/images/placeholders/store-placeholder.svg'" width="120" height="84" />
+                                                        </picture>
+                                                        <div class="gallery">
+                                                            <img th:each="img : ${store.images}" th:src="${img.thumbnail != null ? img.thumbnail : img.filename}" alt="thumb" loading="lazy" onerror="this.onerror=null;this.src='/images/placeholders/store-placeholder.svg'" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="thumb" th:unless="${store.images != null and !store.images.isEmpty()}">
+                                                    <picture>
+                                                        <source th:if="${store.imageUrl != null and #strings.endsWith(store.imageUrl, '.webp')}" th:src="${store.imageUrl}" type="image/webp" />
+                                                        <img th:if="${store.imageUrl != null}" th:src="${store.imageUrl}" th:alt="${store.name}" loading="lazy" onerror="this.onerror=null;this.src='/images/placeholders/store-placeholder.svg'" width="120" height="84" />
+                                                        <img th:if="${store.imageUrl == null}" src="/images/placeholders/store-placeholder.svg" alt="No image" width="120" height="84" />
+                                                    </picture>
+                                                </div>
+                        <div class="store-card-content">
+                            <p th:text="${store.description}"></p>
+
+                                                    <!-- Explicit coupon list for visibility in search results -->
+                                                    <div th:if="${store.coupons != null and !store.coupons.?[active].isEmpty()}" class="coupon-list" style="margin-top:8px;">
+                                                        <div th:each="c : ${store.coupons.?[active]}" class="coupon-item" style="margin-bottom:6px;">
+                                                            <strong th:text="${c.title}" style="background:#ff8a2b;color:#fff;padding:4px 8px;border-radius:8px;font-weight:800;margin-right:8px;"></strong>
+                                                            <span th:text="${c.description}" style="color:#26466f;"></span>
+                                                        </div>
+                                                    </div>
+
+                                                                                                        <!-- Girls list -->
+                                                                                                        <div th:if="${store.girls != null and !store.girls.isEmpty()}" class="girls-list" style="margin-top:8px;">
+                                                                                                            <span class="girls-label" style="font-weight:700;color:#4a4a4a;margin-right:6px;">在籍:</span>
+                                                                                                            <a th:each="g,iterStat : ${store.girls}" th:if="${iterStat.index < 3}" th:href="@{/girls/{id}(id=${g.id})}" class="girl-name" style="margin-right:6px;color:#26466f; text-decoration:none;" th:text="${g.name}"></a>
+                                                                                                            <span th:if="${store.girls.size() > 3}" style="color:#26466f;">他 <span th:text="${store.girls.size() - 3}"></span> 人</span>
+                                                                                                        </div>
+
+                                                                                                        <div class="price-table">
+                                                        <div class="pt-row"><span class="pt-label">料金</span><span class="pt-value" th:text="${store.priceRange}"></span></div>
+                                                        <div class="pt-row"><span class="pt-label">電話</span><span class="pt-value"><svg class="icon" aria-hidden="true" width="16" height="16"><use xlink:href="#icon-phone"></use></svg> <span th:text="${store.phone}"></span></span></div>
+                                                        <div class="pt-row"><span class="pt-label">住所</span><span class="pt-value"><svg class="icon" aria-hidden="true" width="16" height="16"><use xlink:href="#icon-map"></use></svg> <span th:text="${store.address}"></span></span></div>
+                                                    </div>
+
+                                                    <div class="store-review-meta">
+                                                        <span class="rating-inline" th:text="${'★ ' + (#numbers.formatDecimal(reviewAverages[store.id] != null ? reviewAverages[store.id] : 0.0, 1, 1) + ' / 5')}" >★ 0.0 / 5</span>
+                                                        <a th:href="@{'/store/' + ${store.id} + '#reviews'}" class="review-link" th:text="${'口コミ ' + (reviewCounts[store.id] != null ? reviewCounts[store.id] : 0) + '件'}">口コミ 0件</a>
+                                                    </div>
+                                                    <div class="card-actions">
+                                                        <a th:href="@{/store/{id}(id=${store.id})}" class="button small pink">詳細</a>
+                                                        <a th:href="@{/store/{id}(id=${store.id})}" class="button small">予約する</a>
+                                                    </div>
+                                                </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </div>
+</section>
+    </main>
+    <footer class="site-footer">
+        <div class="container">&copy; 2026 紺の街</div>
+    </footer>
+
+    <!-- Lightbox modal -->
+    <div id="lightbox" class="lightbox" style="display:none;">
+        <button class="lb-close" aria-label="閉じる">✕</button>
+        <button class="lb-prev" aria-label="前へ">◀</button>
+        <img id="lightbox-img" src="" alt="ギャラリー画像" />
+        <button class="lb-next" aria-label="次へ">▶</button>
+    </div>
+
+    <script th:src="@{/scripts.js}"></script>
+    </body>
+    </html>

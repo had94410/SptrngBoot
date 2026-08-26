@@ -1,0 +1,182 @@
+HTTP/1.1 302 
+Set-Cookie: JSESSIONID=1BF09B38CB99DEC3324F504E1F16F952; Path=/; HttpOnly
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Location: http://localhost:8080/admin/stores/1/edit
+Content-Language: ja-JP
+Content-Length: 0
+Date: Sat, 15 Aug 2026 18:24:10 GMT
+
+HTTP/1.1 200 
+Set-Cookie: JSESSIONID=E7292EDA8479DCE2A401F881CACBCAD5; Path=/; HttpOnly
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Type: text/html;charset=UTF-8
+Content-Language: ja-JP
+Transfer-Encoding: chunked
+Date: Sat, 15 Aug 2026 18:24:10 GMT
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>店舗編集 | 紺の街 管理</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="container">
+        <a class="brand" href="/">紺の街</a>
+        <nav>
+            <a href="/">店舗検索</a>
+            <a href="/admin">管理画面</a>
+        </nav>
+    </div>
+</header>
+<main class="container">
+    <section class="panel">
+        <h1>店舗編集</h1>
+        <form action="/admin/stores/1/update" method="post"><input type="hidden" name="_csrf" value="nzy2pgiQUt-gBLkujzdkqPjWASlVtKu0E4lcl8Ef9XMnyBuPqAvVljyjarmNZ4BL6hpQnMznLBAw0puZdrE9o_MrxUsUqSm4"/>
+            <div class="field">
+                <label>店舗名</label>
+                <input type="text" name="name" value="紺の街カフェ 001" required />
+            </div>
+            <div class="field">
+                <label>ジャンル</label>
+                <input type="text" name="genre" value="カフェ" />
+            </div>
+            <div class="field">
+                <label>カテゴリ</label>
+                <select name="categoryId">
+                    <option value="">-- 未選択 --</option>
+                    <option value="1" selected="selected">カフェ・喫茶</option>
+                    <option value="2">ダイニング</option>
+                    <option value="3">バー・居酒屋</option>
+                    <option value="4">スナック・ラウンジ</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>都道府県</label>
+                <select name="prefecture">
+                    <option value="">-- 未設定 --</option>
+                    <option value="東京都" selected="selected">東京都</option>
+                    <option value="神奈川県">神奈川県</option>
+                    <option value="大阪府">大阪府</option>
+                    <option value="京都府">京都府</option>
+                    <option value="北海道">北海道</option>
+                    <option value="愛知県">愛知県</option>
+                    <option value="福岡県">福岡県</option>
+                    <option value="埼玉県">埼玉県</option>
+                    <option value="千葉県">千葉県</option>
+                    <option value="兵庫県">兵庫県</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>住所</label>
+                <input type="text" name="address" value="東京都区桜町2-2-2" />
+            </div>
+            <div class="field">
+                <label>電話</label>
+                <input type="text" name="phone" value="03-0001-0003" />
+            </div>
+            <div class="field">
+                <label>価格帯</label>
+                <input type="text" name="priceRange" value="～2000円" />
+            </div>
+            <div class="field">
+                <label>説明</label>
+                <textarea name="description">落ち着いた雰囲気でゆっくりと過ごせるお店です。</textarea>
+            </div>
+
+            <div class="card-actions">
+                <button type="submit" class="button">保存</button>
+                <a href="/admin" class="button small">キャンセル</a>
+            </div>
+        </form>
+    </section>
+
+    <section class="panel">
+        <h2>クーポン管理</h2>
+        <div>
+            <table>
+                <thead>
+                <tr><th>ID</th><th>タイトル</th><th>割引</th><th>有効期限</th><th>状態</th><th>操作</th></tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>テスト割引</td>
+                    <td>percent 10.0</td>
+                    <td>
+                        <span>-</span>
+                        -
+                        <span>-</span>
+                    </td>
+                    <td>有効</td>
+                    <td>
+                        <form action="/admin/stores/1/coupons/1/toggle" method="post" style="display:inline-block;"><input type="hidden" name="_csrf" value="nzy2pgiQUt-gBLkujzdkqPjWASlVtKu0E4lcl8Ef9XMnyBuPqAvVljyjarmNZ4BL6hpQnMznLBAw0puZdrE9o_MrxUsUqSm4"/>
+                            <button type="submit" class="button small">切替</button>
+                        </form>
+                        <form action="/admin/stores/1/coupons/1/delete" method="post" style="display:inline-block; margin-left:8px;"><input type="hidden" name="_csrf" value="nzy2pgiQUt-gBLkujzdkqPjWASlVtKu0E4lcl8Ef9XMnyBuPqAvVljyjarmNZ4BL6hpQnMznLBAw0puZdrE9o_MrxUsUqSm4"/>
+                            <button type="submit" class="button small">削除</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>クーポンを追加</h3>
+        <form action="/admin/stores/1/coupons/create" method="post"><input type="hidden" name="_csrf" value="nzy2pgiQUt-gBLkujzdkqPjWASlVtKu0E4lcl8Ef9XMnyBuPqAvVljyjarmNZ4BL6hpQnMznLBAw0puZdrE9o_MrxUsUqSm4"/>
+            <div class="field">
+                <label>タイトル</label>
+                <input type="text" name="title" />
+            </div>
+            <div class="field">
+                <label>コード</label>
+                <input type="text" name="code" />
+            </div>
+            <div class="field">
+                <label>割引タイプ</label>
+                <select name="discountType">
+                    <option value="percent">%（percent）</option>
+                    <option value="fixed">固定（fixed）</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>割引値（数値）</label>
+                <input type="number" step="0.01" name="discountValue" />
+            </div>
+            <div class="field">
+                <label>有効開始（YYYY-MM-DDThh:mm）</label>
+                <input type="text" name="validFrom" placeholder="2026-08-16T00:00" />
+            </div>
+            <div class="field">
+                <label>有効終了（YYYY-MM-DDThh:mm）</label>
+                <input type="text" name="validTo" placeholder="2026-08-31T23:59" />
+            </div>
+            <div class="field">
+                <label>説明</label>
+                <textarea name="description"></textarea>
+            </div>
+            <div>
+                <button type="submit" class="button">クーポンを追加</button>
+            </div>
+        </form>
+    </section>
+
+</main>
+<footer class="site-footer">
+    <div class="container">&copy; 2026 紺の街</div>
+</footer>
+</body>
+</html>

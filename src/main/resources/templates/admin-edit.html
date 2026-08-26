@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>店舗編集 | 紺の街 管理</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+<header class="site-header">
+    <div class="container">
+        <a class="brand" th:href="@{/}">紺の街</a>
+        <nav>
+            <a th:href="@{/}">店舗検索</a>
+            <a th:href="@{/admin}">管理画面</a>
+        </nav>
+    </div>
+</header>
+<main class="container">
+    <section class="panel">
+        <h1>店舗編集</h1>
+        <form th:action="@{/admin/stores/{id}/update(id=${store.id})}" method="post">
+            <div class="field">
+                <label>店舗名</label>
+                <input type="text" name="name" th:value="${store.name}" required />
+            </div>
+            <div class="field">
+                <label>ジャンル</label>
+                <input type="text" name="genre" th:value="${store.genre}" />
+            </div>
+            <div class="field">
+                <label>カテゴリ</label>
+                <select name="categoryId">
+                    <option value="" th:selected="${store.category == null}">-- 未選択 --</option>
+                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}" th:selected="${store.category != null and store.category.id == cat.id}"></option>
+                </select>
+            </div>
+            <div class="field">
+                <label>都道府県</label>
+                <select name="prefecture">
+                    <option value="" th:selected="${store.prefecture == null}">-- 未設定 --</option>
+                    <option th:each="p : ${prefectures}" th:value="${p}" th:text="${p}" th:selected="${store.prefecture == p}"></option>
+                </select>
+            </div>
+            <div class="field">
+                <label>住所</label>
+                <input type="text" name="address" th:value="${store.address}" />
+            </div>
+            <div class="field">
+                <label>電話</label>
+                <input type="text" name="phone" th:value="${store.phone}" />
+            </div>
+            <div class="field">
+                <label>価格帯</label>
+                <input type="text" name="priceRange" th:value="${store.priceRange}" />
+            </div>
+            <div class="field">
+                <label>説明</label>
+                <textarea name="description" th:text="${store.description}"></textarea>
+            </div>
+
+            <div class="card-actions">
+                <button type="submit" class="button">保存</button>
+                <a th:href="@{/admin}" class="button small">キャンセル</a>
+            </div>
+        </form>
+</section>
+
+<section class="panel">
+    <h2>在籍者（Girls）管理</h2>
+    <div th:if="${girls != null and !girls.isEmpty()}">
+        <table>
+            <thead>
+            <tr><th>ID</th><th>名前</th><th>年齢</th><th>操作</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="g : ${girls}">
+                <td th:text="${g.id}"></td>
+                <td th:text="${g.name}"></td>
+                <td th:text="${g.age}"></td>
+                <td>
+                    <a th:href="@{/girls/{id}/edit(id=${g.id})}" class="button small pink">プロフィール編集</a>
+                    <a th:href="@{/admin/stores/{storeId}/girls/{girlId}/edit(storeId=${store.id},girlId=${g.id})}" class="button small">管理編集</a>
+                    <form th:action="@{/admin/stores/{storeId}/girls/{girlId}/delete(storeId=${store.id},girlId=${g.id})}" method="post" style="display:inline-block; margin-left:8px;">
+                        <button type="submit" class="button small">削除</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>在籍者を追加</h3>
+    <form th:action="@{/admin/stores/{id}/girls/create(id=${store.id})}" method="post">
+        <div class="field">
+            <label>名前</label>
+            <input type="text" name="name" required />
+        </div>
+        <div class="field">
+            <label>年齢</label>
+            <input type="number" name="age" />
+        </div>
+        <div>
+            <button type="submit" class="button">在籍者を追加</button>
+        </div>
+    </form>
+
+    <h3>ギャラリー画像をアップロード</h3>
+    <p>個別編集からもアップロードできます。</p>
+</section>
+
+</main>
+<footer class="site-footer">
+    <div class="container">&copy; 2026 紺の街</div>
+</footer>
+</body>
+</html>

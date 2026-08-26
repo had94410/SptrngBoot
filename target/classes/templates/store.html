@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${store.name} + ' | 店舗詳細'">店舗詳細 | 紺の街</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+<header class="site-header">
+    <div class="container">
+        <a class="brand" th:href="@{/}"><img src="/images/brand/logo.svg" alt="紺の街" class="site-logo"/> 紺の街</a>
+        <nav>
+            <a th:href="@{/}">店舗検索</a>
+            <a th:href="@{/admin}">管理画面</a>
+        </nav>
+    </div>
+</header>
+<main class="container">
+<section>
+    <div class="store-page-grid">
+        <div class="store-detail panel-deep">
+            <div class="store-detail-header">
+                <div>
+                    <div class="eyebrow">店舗詳細</div>
+                    <h1 th:text="${store.name}"></h1>
+                </div>
+                <div class="price-pill" th:text="${store.priceRange}"></div>
+            </div>
+
+            <div class="store-detail-image" th:if="${store.images != null and !store.images.isEmpty()}">
+                <div th:with="first=${store.images[0]}">
+                    <picture>
+                        <source th:if="${first.filenameWebp != null}" th:attr="srcset=${first.mediumFilenameWebp} + ' 640w, ' + ${first.largeFilenameWebp} + ' 1024w, ' + ${first.filenameWebp} + ' 1400w'" type="image/webp" />
+                        <source th:if="${first.mediumFilename != null}" th:attr="srcset=${first.mediumFilename} + ' 640w, ' + ${first.largeFilename} + ' 1024w, ' + ${first.filename} + ' 1400w'" />
+                        <img th:src="${first.filename != null ? first.filename : '/images/placeholders/store-placeholder.svg'}" th:alt="${store.name}" loading="lazy" onerror="this.onerror=null;this.src='/images/placeholders/store-placeholder.svg'" />
+                    </picture>
+                </div>
+            </div>
+
+            <div class="meta-bar">
+                <span th:text="${store.prefecture}"></span>
+                <span th:text="${store.genre}"></span>
+                <span th:text="${store.category.name}"></span>
+            </div>
+
+            <div class="coupon-list" th:if="${store.coupons != null and !store.coupons.isEmpty()}">
+                <div class="coupon-item" th:each="c : ${store.coupons}" th:if="${c.active}">
+                    <strong th:text="${c.title}"></strong>
+                    <span th:text="${c.description}"></span>
+                </div>
+            </div>
+
+            <div class="store-summary">
+                <p th:text="${store.description}"></p>
+            </div>
+
+            <div class="info-card">
+                <div><strong>住所</strong> <span th:text="${store.address}"></span></div>
+                <div><strong>電話</strong> <span th:text="${store.phone}"></span></div>
+            </div>
+        </div>
+
+        <aside class="booking-panel">
+            <div class="eyebrow">予約</div>
+            <h2>予約する</h2>
+            <form th:action="@{/store/{id}/reserve(id=${store.id})}" method="post" th:object="${reservation}">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                <div th:if="${#fields.hasErrors()}">
+                    <ul class="error">
+                        <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                    </ul>
+                </div>
+                <div class="field">
+                    <label>お名前</label>
+                    <input type="text" th:field="*{customerName}" placeholder="例: 山田 太郎" required />
+                    <p class="error" th:errors="*{customerName}"></p>
+                </div>
+                <div class="field">
+                    <label>メールアドレス</label>
+                    <input type="email" th:field="*{email}" placeholder="example@example.com" required />
+                    <p class="error" th:errors="*{email}"></p>
+                </div>
+                <div class="field">
+                    <label>電話番号</label>
+                    <input type="tel" th:field="*{phone}" placeholder="080-1234-5678" required />
+                    <p class="error" th:errors="*{phone}"></p>
+                </div>
+                <div class="field">
+                    <label>予約日時</label>
+                    <input type="datetime-local" th:field="*{reservedAt}" required />
+                    <p class="error" th:errors="*{reservedAt}"></p>
+                </div>
+                <div class="field">
+                    <label>メモ</label>
+                    <textarea th:field="*{notes}" placeholder="ご要望があればご記入ください"></textarea>
+                </div>
+                <button type="submit">予約を送信する</button>
+            </form>
+        </aside>
+    </div>
+
+    <section id="reviews" class="reviews-panel panel-deep">
+        <div class="panel-head review-head">
+            <div>
+                <div class="eyebrow">口コミ</div>
+                <h2>お店の評価</h2>
+            </div>
+            <div class="review-summary" th:if="${reviewCount != null and reviewCount > 0}">
+                <span class="stars" th:text="${#numbers.formatDecimal(reviewAverage, 1, 1)} + ' / 5'">0.0 / 5</span>
+                <small th:text="${reviewCount} + '件の口コミ'">0件の口コミ</small>
+            </div>
+        </div>
+
+        <div th:if="${reviewMessage}" class="notification">
+            <p th:text="${reviewMessage}"></p>
+        </div>
+
+        <div class="review-layout">
+            <div class="review-form-wrap">
+                <form class="review-form" th:action="@{/store/{id}/reviews(id=${store.id})}" method="post">
+                    <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                    <div class="field">
+                        <label>お名前</label>
+                        <input type="text" name="reviewerName" placeholder="山田さん" required />
+                    </div>
+                    <div class="field">
+                        <label>評価</label>
+                        <select name="rating" required>
+                            <option value="5">5.0 / 最高</option>
+                            <option value="4">4.0 / 良い</option>
+                            <option value="3">3.0 / 普通</option>
+                            <option value="2">2.0 / いまいち</option>
+                            <option value="1">1.0 / 悪い</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>口コミ内容</label>
+                        <textarea name="comment" rows="4" placeholder="雰囲気や接客、価格などを教えてください"></textarea>
+                    </div>
+                    <button type="submit" class="button">口コミを投稿</button>
+                </form>
+            </div>
+
+            <div class="review-list" th:if="${reviews != null and !reviews.isEmpty()}">
+                <div class="review-item" th:each="review : ${reviews}">
+                    <div class="review-item-head">
+                        <strong th:text="${review.reviewerName}">匿名</strong>
+                        <span class="star-rating" th:text="${review.rating} + '★'">5★</span>
+                    </div>
+                    <div class="review-date" th:text="${#temporals.format(review.createdAt, 'yyyy年MM月dd日')}">2026/08/16</div>
+                    <p th:text="${review.comment != null and !#strings.isEmpty(review.comment) ? review.comment : 'コメントはありません。'}">コメント</p>
+                </div>
+            </div>
+
+            <div th:unless="${reviews != null and !reviews.isEmpty()}" class="review-empty">
+                <p>まだ口コミはありません。最初の口コミを投稿してみましょう。</p>
+            </div>
+        </div>
+    </section>
+</section>
+</main>
+<footer class="site-footer">
+    <div class="container">&copy; 2026 紺の街</div>
+</footer>
+</body>
+</html>

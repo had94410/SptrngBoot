@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在籍者編集 | 紺の街 管理</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+<header class="site-header">
+    <div class="container">
+        <a class="brand" th:href="@{/}">紺の街</a>
+        <nav>
+            <a th:href="@{/}">店舗検索</a>
+            <a th:href="@{/admin}">管理画面</a>
+        </nav>
+    </div>
+</header>
+<main class="container">
+    <section class="panel">
+        <h1>在籍者編集</h1>
+        <form th:action="@{/admin/stores/{storeId}/girls/{girlId}/update(storeId=${storeId},girlId=${girl.id})}" method="post">
+            <div class="field">
+                <label>名前</label>
+                <input type="text" name="name" th:value="${girl.name}" required />
+            </div>
+            <div class="field">
+                <label>年齢</label>
+                <input type="number" name="age" th:value="${girl.age}" />
+            </div>
+            <div class="field">
+                <label>プロフィール</label>
+                <textarea name="bio" th:text="${girl.bio}"></textarea>
+            </div>
+            <div class="field">
+                <label>Twitter URL</label>
+                <input type="text" name="twitterUrl" th:value="${girl.twitterUrl}" />
+            </div>
+            <div class="field">
+                <label>Instagram URL</label>
+                <input type="text" name="instagramUrl" th:value="${girl.instagramUrl}" />
+            </div>
+            <div class="field">
+                <label>LINE URL</label>
+                <input type="text" name="lineUrl" th:value="${girl.lineUrl}" />
+            </div>
+            <div class="field">
+                <label>スケジュール（改行で入力）</label>
+                <textarea name="schedule" th:text="${girl.schedule}"></textarea>
+            </div>
+            <div class="card-actions">
+                <button type="submit" class="button">保存</button>
+                <a th:href="@{/admin/stores/{id}/edit(id=${storeId})}" class="button small">戻る</a>
+            </div>
+        </form>
+    </section>
+
+    <section class="panel">
+        <h2>プロフィール写真</h2>
+        <div th:if="${girl.imageUrl != null and !#strings.isEmpty(girl.imageUrl)}" style="margin-bottom:12px;">
+            <img th:src="${girl.imageUrl}" style="max-height:180px; border-radius:12px;" />
+        </div>
+        <div th:unless="${girl.imageUrl != null and !#strings.isEmpty(girl.imageUrl)}">
+            <p>まだプロフィール写真がありません。</p>
+        </div>
+        <form th:action="@{/admin/stores/{storeId}/girls/{girlId}/profile/upload(storeId=${storeId},girlId=${girl.id})}" method="post" enctype="multipart/form-data" style="margin-top:12px;">
+            <div class="field">
+                <label>プロフィール写真</label>
+                <input type="file" name="file" accept="image/*" required />
+            </div>
+            <div class="card-actions">
+                <button type="submit" class="button">プロフィールを更新</button>
+                <button th:if="${girl.imageUrl != null and !#strings.isEmpty(girl.imageUrl)}" type="submit" class="button small" form="delete-profile-image-form">削除</button>
+            </div>
+        </form>
+        <form id="delete-profile-image-form" th:if="${girl.imageUrl != null and !#strings.isEmpty(girl.imageUrl)}" th:action="@{/admin/stores/{storeId}/girls/{girlId}/profile/delete(storeId=${storeId},girlId=${girl.id})}" method="post" style="display:inline;">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+        </form>
+    </section>
+
+    <section class="panel">
+        <h2>写メ・ギャラリー</h2>
+        <div th:if="${girl.gallery != null and !#strings.isEmpty(girl.gallery)}" style="display:flex;flex-wrap:wrap;gap:12px; margin-bottom:16px;">
+            <div th:each="url : ${girl.gallery.split(';')}" style="position:relative;">
+                <img th:src="${url}" style="max-height:120px; border-radius:10px;" />
+                <form th:action="@{/admin/stores/{storeId}/girls/{girlId}/gallery/delete(storeId=${storeId},girlId=${girl.id})}" method="post" style="margin-top:8px;">
+                    <input type="hidden" name="imageUrl" th:value="${url}" />
+                    <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                    <button type="submit" class="button small">削除</button>
+                </form>
+            </div>
+        </div>
+        <div th:unless="${girl.gallery != null and !#strings.isEmpty(girl.gallery)}">
+            <p>まだ写メがありません。</p>
+        </div>
+        <h3>画像をアップロード</h3>
+        <form th:action="@{/admin/stores/{storeId}/girls/{girlId}/upload(storeId=${storeId},girlId=${girl.id})}" method="post" enctype="multipart/form-data">
+            <div class="field">
+                <label>画像ファイル（複数可）</label>
+                <input type="file" name="files" multiple accept="image/*" />
+            </div>
+            <div>
+                <button type="submit" class="button">アップロード</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="panel">
+        <h2>写メ日記（簡易）</h2>
+        <p>日付（任意）、本文、写真を添付して投稿できます。写真は既存のギャラリー同様に保存されます。</p>
+        <form th:action="@{/admin/stores/{storeId}/girls/{girlId}/diary/add(storeId=${storeId},girlId=${girl.id})}" method="post" enctype="multipart/form-data">
+            <div class="field">
+                <label>日付（YYYY-MM-DD）</label>
+                <input type="text" name="date" placeholder="2026-08-16" />
+            </div>
+            <div class="field">
+                <label>本文</label>
+                <textarea name="body"></textarea>
+            </div>
+            <div class="field">
+                <label>添付画像（複数可）</label>
+                <input type="file" name="files" multiple />
+            </div>
+            <div>
+                <button type="submit" class="button">日記を追加</button>
+            </div>
+        </form>
+
+        <h3>既存の日記</h3>
+        <div th:if="${girl.diary != null and !#strings.isEmpty(girl.diary)}">
+            <div th:each="entry : ${girl.diary.split(';')}">
+                <div th:if="${entry != null and entry.contains('|')}">
+                    <div th:with="parts=${entry.split('|')}">
+                        <div class="diary-entry" style="border-bottom:1px solid #eee;padding:8px 0;">
+                            <div class="diary-date" th:text="${parts[0]}"></div>
+                            <div class="diary-body" th:text="${parts[1]}"></div>
+                            <div class="diary-images" style="margin-top:6px;">
+                                <span th:if="${parts.length > 2 and parts[2] != ''}" th:each="img : ${parts[2].split(',')}">
+                                    <img th:src="${img}" style="max-height:100px;margin-right:6px;" />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p th:if="${girl.diary == null}">まだ日記はありません。</p>
+    </section>
+
+</main>
+<footer class="site-footer">
+    <div class="container">&copy; 2026 紺の街</div>
+</footer>
+</body>
+</html>

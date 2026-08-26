@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理画面 | 紺の街</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+<header class="site-header">
+    <div class="container">
+        <a class="brand" th:href="@{/}"><img src="/images/brand/logo.svg" alt="紺の街" class="site-logo"/> 紺の街</a>
+        <nav>
+            <a th:href="@{/}">店舗検索</a>
+            <a th:href="@{/admin}">管理画面</a>
+        </nav>
+    </div>
+</header>
+
+<!-- Inline SVG icons (hidden) -->
+<svg aria-hidden="true" xmlns:xlink="http://www.w3.org/1999/xlink" style="position:absolute;width:0;height:0;overflow:hidden;" focusable="false">
+    <symbol id="icon-phone" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1v3.5a1 1 0 01-1 1C10.07 21.5 2.5 13.93 2.5 4a1 1 0 011-1H7a1 1 0 011 1c0 1.24.2 2.45.57 3.57a1 1 0 01-.24 1.01l-2.71 2.21z"/>
+    </symbol>
+    <symbol id="icon-map" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1114.5 9 2.5 2.5 0 0112 11.5z"/>
+    </symbol>
+    <symbol id="icon-clock" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M12 1a11 11 0 1011 11A11 11 0 0012 1zm1 11H7a1 1 0 010-2h5V6a1 1 0 012 0z"/>
+    </symbol>
+</svg>
+<main class="container">
+<section>
+<div class="admin-shell">
+    <div class="hero admin-hero">
+        <div class="hero-banner">
+            <div class="hero-badge">管理画面</div>
+            <div class="hero-brand">紺の街</div>
+            <div class="hero-subtitle">店舗・予約・在籍情報を管理します。</div>
+        </div>
+        <div class="quick-tabs" aria-label="管理メニュー">
+            <button type="button" class="quick-tab active">ダッシュボード</button>
+            <button type="button" class="quick-tab">店舗管理</button>
+            <button type="button" class="quick-tab">予約管理</button>
+            <button type="button" class="quick-tab">画像更新</button>
+            <button type="button" class="quick-tab">運用設定</button>
+        </div>
+    </div>
+    <div class="admin-header">
+        <div>
+            <div class="eyebrow">運用メニュー</div>
+            <h1>店舗管理</h1>
+        </div>
+        <div class="admin-header-actions">
+            <a th:href="@{/admin/image-checklist}" class="button small">確認リスト</a>
+            <a th:href="@{/}" class="button small pink">店舗検索へ</a>
+        </div>
+    </div>
+    <div class="admin-metrics">
+        <div class="metric-card">
+            <span class="metric-label">店舗数</span>
+            <strong th:text="${#lists.size(stores)}">0</strong>
+        </div>
+        <div class="metric-card">
+            <span class="metric-label">予約件数</span>
+            <strong th:text="${#lists.size(reservations)}">0</strong>
+        </div>
+        <div class="metric-card">
+            <span class="metric-label">相談件数</span>
+            <strong th:text="${#lists.size(consultations)}">0</strong>
+        </div>
+        <div class="metric-card">
+            <span class="metric-label">画像差し替え</span>
+            <strong>準備中</strong>
+        </div>
+    </div>
+    <div th:if="${adminMessage}" class="notification">
+        <p th:text="${adminMessage}"></p>
+    </div>
+    <div class="dashboard-grid">
+        <section class="panel admin-panel">
+            <div class="panel-head">
+                <h2>店舗一覧</h2>
+                <span class="panel-chip" th:text="'件数 ' + ${#lists.size(stores)}"></span>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>店舗名</th>
+                        <th>画像</th>
+                        <th>ジャンル</th>
+                        <th>カテゴリ</th>
+                        <th>都道府県</th>
+                        <th>住所</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="store : ${stores}">
+                        <td th:text="${store.id}"></td>
+                        <td th:text="${store.name}"></td>
+                        <td>
+                            <div class="image-swap-shell">
+                                <div class="image-swap-meta">
+                                    <span>差し替え用</span>
+                                    <small>後で本画像に置換</small>
+                                </div>
+                                <div class="admin-thumbs">
+                                    <div th:if="${store.images != null}">
+                                        <img th:each="img : ${store.images}" th:src="${img.thumbnail != null ? img.thumbnail : img.filename}" alt="" loading="lazy" width="64" height="48" />
+                                    </div>
+                                </div>
+                                <div class="admin-image-actions">
+                                    <form th:action="@{/admin/stores/{id}/upload(id=${store.id})}" method="post" enctype="multipart/form-data" class="upload-form">
+                                        <input type="file" name="file" accept="image/*" />
+                                        <button type="submit" class="button small">アップロード</button>
+                                    </form>
+                                    <a th:href="@{/admin/stores/{id}/edit(id=${store.id})}" class="button small">編集</a>
+                                </div>
+                            </div>
+                        </td>
+                        <td th:text="${store.genre}"></td>
+                        <td th:text="${store.category.name}"></td>
+                        <td th:text="${store.prefecture}"></td>
+                        <td th:text="${store.address}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section class="panel admin-panel">
+            <div class="panel-head">
+                <h2>予約一覧</h2>
+                <span class="panel-chip" th:text="'件数 ' + ${#lists.size(reservations)}"></span>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>店舗</th>
+                        <th>お名前</th>
+                        <th>日時</th>
+                        <th>連絡先</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="reservation : ${reservations}">
+                        <td th:text="${reservation.id}"></td>
+                        <td><a th:href="@{/store/{id}(id=${reservation.store.id})}" th:text="${reservation.store.name}"></a></td>
+                        <td th:text="${reservation.customerName}"></td>
+                        <td th:text="${#temporals.format(reservation.reservedAt, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td>
+                            <div th:text="${reservation.email}"></div>
+                            <div th:text="${reservation.phone}"></div>
+                        </td>
+                        <td>
+                            <form th:action="@{/admin/reservations/{id}/cancel(id=${reservation.id})}" method="post" class="inline-form">
+                                <button type="submit" class="button small">キャンセル</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section class="panel admin-panel">
+            <div class="panel-head">
+                <h2>バレエ相談一覧</h2>
+                <span class="panel-chip" th:text="'件数 ' + ${#lists.size(consultations)}"></span>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>送信元</th>
+                        <th>希望エリア</th>
+                        <th>年齢</th>
+                        <th>レベル</th>
+                        <th>お名前</th>
+                        <th>電話番号</th>
+                        <th>日時</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="consultation : ${consultations}">
+                        <td th:text="${consultation.id}"></td>
+                        <td th:text="${consultation.sourcePage}"></td>
+                        <td th:text="${consultation.preferredArea}"></td>
+                        <td th:text="${consultation.ageGroup}"></td>
+                        <td th:text="${consultation.level}"></td>
+                        <td th:text="${consultation.customerName}"></td>
+                        <td th:text="${consultation.phone}"></td>
+                        <td th:text="${#temporals.format(consultation.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(consultations)}">
+                        <td colspan="8">相談データはまだありません。</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+</section>
+</main>
+<footer class="site-footer">
+    <div class="container">&copy; 2026 紺の街</div>
+</footer>
+</body>
+</html>

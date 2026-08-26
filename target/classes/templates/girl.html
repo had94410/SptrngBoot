@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${girl.name} + ' | プロフィール'">在籍女の子 | 紺の街</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+<header class="site-header">
+    <div class="container">
+        <a class="brand" th:href="@{/}"><img src="/images/brand/logo.svg" alt="紺の街" class="site-logo"/> 紺の街</a>
+        <nav>
+            <a th:href="@{/}">店舗検索</a>
+            <a th:href="@{/admin}">管理画面</a>
+        </nav>
+    </div>
+</header>
+<main class="container">
+    <section class="girl-profile">
+        <div class="profile-grid">
+            <div class="profile-photo panel-deep">
+                <picture>
+                    <img id="main-photo" th:if="${girl.imageUrl != null}" th:src="${girl.imageUrl}" th:alt="${girl.name}" loading="lazy" onerror="this.onerror=null;this.src='/images/placeholders/girl-placeholder.svg'" />
+                    <img th:if="${girl.imageUrl == null}" src="/images/placeholders/girl-placeholder.svg" alt="No image" />
+                </picture>
+
+                <div class="gallery-thumbs" th:if="${galleryList != null and !galleryList.isEmpty()}">
+                    <img th:each="gimg : ${galleryList}" th:src="${gimg}" alt="" class="thumb-mini" th:attr="data-src=${gimg}" />
+                </div>
+            </div>
+
+            <div class="profile-info panel-deep">
+                <div class="profile-header">
+                    <div>
+                        <div class="eyebrow">在籍者プロフィール</div>
+                        <h1 th:text="${girl.name}"></h1>
+                    </div>
+                    <div class="profile-tag" th:if="${girl.age != null}">年齢 <span th:text="${girl.age}"></span></div>
+                </div>
+
+                <div class="meta-bar" th:if="${store != null}">
+                    <span>所属店舗</span>
+                    <a th:href="@{/store/{id}(id=${store.id})}" th:text="${store.name}"></a>
+                </div>
+
+                <div class="profile-bio">
+                    <h3>プロフィール</h3>
+                    <p th:if="${girl.bio != null}" th:text="${girl.bio}"></p>
+                    <p th:if="${girl.bio == null}">プロフィールが登録されていません。</p>
+                </div>
+
+                <div class="profile-sns">
+                    <h3>SNS</h3>
+                    <div class="sns-row">
+                        <a th:if="${girl.twitterUrl != null}" th:href="${girl.twitterUrl}" target="_blank" rel="noopener">Twitter</a>
+                        <a th:if="${girl.instagramUrl != null}" th:href="${girl.instagramUrl}" target="_blank" rel="noopener">Instagram</a>
+                        <a th:if="${girl.lineUrl != null}" th:href="${girl.lineUrl}" target="_blank" rel="noopener">LINE</a>
+                    </div>
+                </div>
+
+                <div class="profile-schedule">
+                    <h3>出勤情報</h3>
+                    <table th:if="${scheduleEntries != null and !scheduleEntries.isEmpty()}">
+                        <tbody>
+                        <tr th:each="entry : ${scheduleEntries}">
+                            <td th:text="${entry.day}"></td>
+                            <td th:text="${entry.time != '' ? entry.time : '未設定'}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p th:if="${scheduleEntries == null or scheduleEntries.isEmpty()}">出勤情報は登録されていません。</p>
+                </div>
+
+                <div class="profile-diary">
+                    <h3>写メ日記</h3>
+                    <div th:if="${girl.diary != null and !#strings.isEmpty(girl.diary)}">
+                        <div th:each="entry : ${girl.diary.split(';')}" class="diary-entry">
+                            <div th:if="${entry != null and entry.contains('|')}">
+                                <div th:with="parts=${entry.split('|')}">
+                                    <div class="diary-date" th:text="${parts[0] != '' ? parts[0] : '日付未設定'}"></div>
+                                    <div class="diary-body" th:text="${parts[1]}"></div>
+                                    <div class="diary-images" th:if="${parts.length > 2 and parts[2] != ''}">
+                                        <img th:each="img : ${parts[2].split(',')}" th:src="${img}" alt="" class="thumb-mini diary-thumb" th:attr="data-src=${img}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p th:if="${girl.diary == null or #strings.isEmpty(girl.diary)}">まだ日記はありません。</p>
+                </div>
+
+                <div class="profile-actions">
+                    <a th:href="@{/store/{id}(id=${store.id})}" class="button small">店舗ページへ</a>
+                    <a th:href="@{/}" class="button small">一覧に戻る</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<footer class="site-footer">
+    <div class="container">&copy; 2026 紺の街</div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var thumbnails = document.querySelectorAll('img[data-src]');
+        var main = document.getElementById('main-photo');
+        if (!main) return;
+        thumbnails.forEach(function(t) {
+            t.addEventListener('click', function() {
+                var src = t.getAttribute('data-src');
+                if (src) main.src = src;
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

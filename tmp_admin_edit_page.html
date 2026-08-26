@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>店舗編集 | 紺の街 管理</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="container">
+        <a class="brand" href="/">紺の街</a>
+        <nav>
+            <a href="/">店舗検索</a>
+            <a href="/admin">管理画面</a>
+        </nav>
+    </div>
+</header>
+<main class="container">
+    <section class="panel">
+        <h1>店舗編集</h1>
+        <form action="/admin/stores/1/update" method="post"><input type="hidden" name="_csrf" value="Ng8wNFYfDQIu5SmPk1biY8fD1FFllEHgs0cYaiN7IcyViir7Dm0HAmN6aGQDhk27oXvWBqPx-WlSoHTN0nV7WxZNQvj0vEzP"/>
+            <div class="field">
+                <label>店舗名</label>
+                <input type="text" name="name" value="紺の街カフェ 001" required />
+            </div>
+            <div class="field">
+                <label>ジャンル</label>
+                <input type="text" name="genre" value="カフェ" />
+            </div>
+            <div class="field">
+                <label>カテゴリ</label>
+                <select name="categoryId">
+                    <option value="">-- 未選択 --</option>
+                    <option value="1" selected="selected">カフェ・喫茶</option>
+                    <option value="2">ダイニング</option>
+                    <option value="3">バー・居酒屋</option>
+                    <option value="4">スナック・ラウンジ</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>都道府県</label>
+                <select name="prefecture">
+                    <option value="">-- 未設定 --</option>
+                    <option value="東京都" selected="selected">東京都</option>
+                    <option value="神奈川県">神奈川県</option>
+                    <option value="大阪府">大阪府</option>
+                    <option value="京都府">京都府</option>
+                    <option value="北海道">北海道</option>
+                    <option value="愛知県">愛知県</option>
+                    <option value="福岡県">福岡県</option>
+                    <option value="埼玉県">埼玉県</option>
+                    <option value="千葉県">千葉県</option>
+                    <option value="兵庫県">兵庫県</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>住所</label>
+                <input type="text" name="address" value="東京都区桜町2-2-2" />
+            </div>
+            <div class="field">
+                <label>電話</label>
+                <input type="text" name="phone" value="03-0001-0003" />
+            </div>
+            <div class="field">
+                <label>価格帯</label>
+                <input type="text" name="priceRange" value="～2000円" />
+            </div>
+            <div class="field">
+                <label>説明</label>
+                <textarea name="description">落ち着いた雰囲気でゆっくりと過ごせるお店です。</textarea>
+            </div>
+
+            <div class="card-actions">
+                <button type="submit" class="button">保存</button>
+                <a href="/admin" class="button small">キャンセル</a>
+            </div>
+        </form>
+    </section>
+</main>
+<footer class="site-footer">
+    <div class="container">&copy; 2026 紺の街</div>
+</footer>
+</body>
+</html>

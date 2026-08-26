@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 120">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0b1525"/>
+      <stop offset="100%" stop-color="#163253"/>
+    </linearGradient>
+  </defs>
+  <rect width="320" height="120" rx="20" fill="url(#bg)"/>
+  <text x="160" y="72" text-anchor="middle" fill="#edf4ff" font-size="34" font-family="Arial, sans-serif" font-weight="700">紺の街</text>
+</svg>

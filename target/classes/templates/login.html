@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理者ログイン | 紺の街</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+<header class="site-header">
+    <div class="container">
+        <a class="brand" th:href="@{/}"><img src="/images/brand/logo.svg" alt="紺の街" class="site-logo"/> 紺の街</a>
+        <nav>
+            <a th:href="@{/}">店舗検索</a>
+            <a th:href="@{/admin}">管理画面</a>
+        </nav>
+    </div>
+</header>
+<main class="container">
+    <section class="login-shell">
+        <div class="login-card">
+            <div class="login-brand-panel">
+                <div class="login-brand-mark">
+                    <img src="/images/brand/logo.svg" alt="紺の街" />
+                </div>
+                <div class="login-brand-copy">
+                    <span class="hero-badge">管理者専用</span>
+                    <h1>紺の街</h1>
+                    <p>店舗情報・予約・画像の更新は、こちらで管理できます。</p>
+                </div>
+                <ul class="login-feature-list">
+                    <li>店舗情報の更新</li>
+                    <li>予約の確認と管理</li>
+                    <li>ブランド画像の差し替え</li>
+                </ul>
+            </div>
+
+            <div class="login-form-panel">
+                <div class="login-intro">
+                    <span class="hero-badge hero-badge-soft">管理者ログイン</span>
+                    <h2>アクセス</h2>
+                </div>
+
+                <form th:action="@{/login}" method="post" class="login-form">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <div class="field">
+                        <label for="username">ユーザー名</label>
+                        <input id="username" type="text" name="username" autocomplete="username" placeholder="admin" required />
+                    </div>
+                    <div class="field">
+                        <label for="password">パスワード</label>
+                        <input id="password" type="password" name="password" autocomplete="current-password" placeholder="adminpass" required />
+                    </div>
+
+                    <div class="login-meta">
+                        <span>デモ用アカウント</span>
+                        <strong>admin / adminpass</strong>
+                    </div>
+
+                    <button type="submit" class="button button-block">ログイン</button>
+                    <a th:href="@{/}" class="button button-secondary">店舗一覧へ戻る</a>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+<footer class="site-footer">
+    <div class="container">&copy; 2026 紺の街</div>
+</footer>
+</body>
+</html>

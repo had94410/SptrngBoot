@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画像更新チェックリスト | 紺の街 管理</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+<header class="site-header">
+    <div class="container">
+        <a class="brand" th:href="@{/}"><img src="/images/brand/logo.svg" alt="紺の街" class="site-logo"/> 紺の街</a>
+        <nav>
+            <a th:href="@{/}">店舗検索</a>
+            <a th:href="@{/admin}">管理画面</a>
+        </nav>
+    </div>
+</header>
+<main class="container">
+    <section class="section-shell">
+        <div class="hero admin-hero">
+            <div class="hero-banner">
+                <div class="hero-badge">業務向け運用</div>
+                <div class="hero-brand">画像更新</div>
+                <div class="hero-subtitle">ブランド画像・店舗画像・プロフィール画像の確認リスト</div>
+            </div>
+        </div>
+
+        <div class="panel checklist-panel">
+            <div class="panel-head">
+                <h2>画像更新確認チェックリスト</h2>
+                <span class="panel-chip">運用用</span>
+            </div>
+
+            <div class="checklist-grid">
+                <div class="check-item">
+                    <h3>ブランド画像</h3>
+                    <label><input type="checkbox" /> ロゴを差し替えた</label>
+                    <label><input type="checkbox" /> ヒーロー画像を差し替えた</label>
+                    <label><input type="checkbox" /> パスが `/images/brand/...` になっている</label>
+                    <label><input type="checkbox" /> 表示確認済み</label>
+                </div>
+
+                <div class="check-item">
+                    <h3>店舗画像</h3>
+                    <label><input type="checkbox" /> 代表画像が設定済み</label>
+                    <label><input type="checkbox" /> ギャラリー画像が揃っている</label>
+                    <label><input type="checkbox" /> 画像がぼやけていない</label>
+                    <label><input type="checkbox" /> モバイルでも見やすい</label>
+                </div>
+
+                <div class="check-item">
+                    <h3>プロフィール画像</h3>
+                    <label><input type="checkbox" /> 主要写真を差し替えた</label>
+                    <label><input type="checkbox" /> 画像サイズが自然</label>
+                    <label><input type="checkbox" /> 背景と調和している</label>
+                    <label><input type="checkbox" /> 画質確認済み</label>
+                </div>
+
+                <div class="check-item">
+                    <h3>公開確認</h3>
+                    <label><input type="checkbox" /> トップページで確認</label>
+                    <label><input type="checkbox" /> 店舗詳細で確認</label>
+                    <label><input type="checkbox" /> 管理画面で確認</label>
+                    <label><input type="checkbox" /> 再デプロイ後に確認</label>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<footer class="site-footer">
+    <div class="container">&copy; 2026 紺の街</div>
+</footer>
+</body>
+</html>

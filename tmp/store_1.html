@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>紺の街カフェ 001 | 店舗詳細</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="container">
+        <a class="brand" href="/"><img src="/images/logo.png" alt="紺の街" class="site-logo"/> 紺の街</a>
+        <nav>
+            <a href="/">店舗検索</a>
+            <a href="/admin">管理画面</a>
+        </nav>
+    </div>
+</header>
+<main class="container">
+<section>
+    <div class="store-page-grid">
+        <div class="store-detail">
+            <h1>紺の街カフェ 001</h1>
+            <div class="store-detail-image">
+                <div>
+                    <picture>
+                                            
+                                                                                        <source srcset="/images/stores/1786817951157-test.png-640.jpg 640w, /images/stores/1786817951157-test.png-1024.jpg 1024w, /images/stores/1786817951157-test.png-1400.jpg 1400w" />
+                        <img src="/images/stores/1786817951157-test.png-1400.jpg" alt="紺の街カフェ 001" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/900x420.png?text=No+Image'" />
+                    </picture>
+                </div>
+            </div>
+            <div class="meta">
+                <span>東京都</span>
+                <span>カフェ</span>
+                <span>～2000円</span>
+                <span>カフェ・喫茶</span>
+                
+            </div>
+            <p>落ち着いた雰囲気でゆっくりと過ごせるお店です。</p>
+            <div class="info">
+                <div><strong>住所:</strong> <span>東京都区桜町2-2-2</span></div>
+                <div><strong>電話:</strong> <span>03-0001-0003</span></div>
+            </div>
+        </div>
+
+        <div class="booking-panel">
+        <h2>予約する</h2>
+        <form action="/store/1/reserve" method="post"><input type="hidden" name="_csrf" value="f0uQXCqTfcexYkvtECzBea6KUzBzOPH3UZS-jTS1Cqavfvj7GSmmPRqlG6OcAy-OdAH1H8y9fggRDMLaMK2JvFWNOJCZTM7D"/>
+            
+            <div class="field">
+                <label>お名前</label>
+                <input type="text" placeholder="例: 山田 太郎" required id="customerName" name="customerName" value="" />
+                
+            </div>
+            <div class="field">
+                <label>メールアドレス</label>
+                <input type="email" placeholder="example@example.com" required id="email" name="email" value="" />
+                
+            </div>
+            <div class="field">
+                <label>電話番号</label>
+                <input type="tel" placeholder="080-1234-5678" required id="phone" name="phone" value="" />
+                
+            </div>
+            <div class="field">
+                <label>予約日時</label>
+                <input type="datetime-local" required id="reservedAt" name="reservedAt" value="" />
+                
+            </div>
+            <div class="field">
+                <label>メモ</label>
+                <textarea placeholder="ご要望があればご記入ください" id="notes" name="notes"></textarea>
+            </div>
+            <button type="submit">予約を送信する</button>
+        </form>
+    </div>
+</section>
+</main>
+<footer class="site-footer">
+    <div class="container">&copy; 2026 紺の街</div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0d1a2c"/>
+      <stop offset="100%" stop-color="#152d4d"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <rect x="80" y="80" width="1040" height="640" rx="32" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.2)"/>
+  <circle cx="600" cy="280" r="110" fill="rgba(255,255,255,0.08)"/>
+  <path d="M540 218h120v120H540zm0 135h120v120H540zM570 180h60v40h-60zm-60 70h60v80h-60zm150 0h60v80h-60zm-120 160h300v40H420zm0 0" fill="#dfe9f9" opacity="0.9"/>
+  <text x="600" y="520" text-anchor="middle" fill="#eaf2ff" font-size="60" font-family="Arial, sans-serif" font-weight="700">店舗画像</text>
+  <text x="600" y="585" text-anchor="middle" fill="#a8bbd9" font-size="28" font-family="Arial, sans-serif">Replace later with licensed image</text>
+</svg>
